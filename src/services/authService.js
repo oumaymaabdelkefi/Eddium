@@ -97,12 +97,12 @@ export async function updateUserProgress(userId, xpEarned, wordsLearned, battleR
 
     await updateDoc(userRef, updateData);
 
-    console.log("🔥 FIRESTORE WRITE COMPLETED");
+    
 
     const verifySnap = await getDoc(userRef);
 
     console.log(
-      "🔥 FIRESTORE AFTER WRITE:",
+      
       verifySnap.exists() ? verifySnap.data() : "DOCUMENT DOES NOT EXIST"
     );
 
@@ -133,16 +133,12 @@ export async function updateUserProgress(userId, xpEarned, wordsLearned, battleR
 // ── Fetch Battle History ──────────────────────────────────
 export async function fetchBattleHistory(userId) {
   try {
-    const q = query(
-      collection(db, 'users', userId, 'battles'),
-      orderBy('date', 'desc')
+    const snapshot = await getDocs(
+      collection(db, 'users', userId, 'battles')
     );
-    const snapshot = await getDocs(q);
     const battles = [];
-    snapshot.forEach(doc => {
-      battles.push({ id: doc.id, ...doc.data() });
-    });
-    return battles;
+    snapshot.forEach(doc => battles.push({ id: doc.id, ...doc.data() }));
+    return battles.sort((a, b) => (b.date?.seconds || 0) - (a.date?.seconds || 0));
   } catch (error) {
     console.log('fetchBattleHistory error:', error.message);
     return [];
