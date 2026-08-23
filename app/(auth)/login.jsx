@@ -3,9 +3,22 @@ import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, ActivityIndicator,
   KeyboardAvoidingView, Platform, ScrollView,
+  ImageBackground, Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { loginUser, getErrorMessage } from '../../src/services/authService';
+
+const { width, height } = Dimensions.get('window');
+
+const NAVY      = '#091057';
+const TEAL      = '#2D9596';
+const BLUE      = '#1053A9';
+const PALE_BLUE = '#CDEDFF';
+const ICE       = '#ECF6FF';
+const ORANGE    = '#EC8305';
+const WHITE     = '#FFFFFF';
+const MUTED     = '#5B7A9D';
+const BORDER    = '#CDEDFF';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -35,141 +48,275 @@ export default function LoginScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView contentContainerStyle={styles.scroll}>
+      {/* ── BACKGROUND ─────────────────────── */}
+      <ImageBackground
+        source={require('../../assets/images/dojo-bg.png')}
+        style={styles.background}
+        resizeMode="cover"
+      >
+        {/* Dark overlay with brand navy tint */}
+        <View style={styles.overlay} />
 
-        <View style={styles.header}>
-          <Text style={styles.appName}>EDDIUM</Text>
-          <Text style={styles.tagline}>Vocabulary Adventure</Text>
-        </View>
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
 
-        <View style={styles.form}>
-          <Text style={styles.title}>Welcome back</Text>
-          <Text style={styles.subtitle}>Login to continue your training</Text>
+          {/* ── TOP SECTION ──────────────────── */}
+          <View style={styles.topSection}>
 
-          {error ? (
-            <View style={styles.errorBox}>
-              <Text style={styles.errorText}>{error}</Text>
+            {/* Logo area */}
+            <View style={styles.logoWrap}>
+              <Text style={styles.logoStar}>✳</Text>
             </View>
-          ) : null}
 
-          <View style={styles.field}>
-            <Text style={styles.label}>EMAIL</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="your@email.com"
-              placeholderTextColor="#9BB8AF"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+            <Text style={styles.appName}>eddium</Text>
+            <Text style={styles.tagline}>Master your vocabulary. Win every battle.</Text>
+
+            {/* Decorative divider */}
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerIcon}>⚔️</Text>
+              <View style={styles.dividerLine} />
+            </View>
           </View>
 
-          <View style={styles.field}>
-            <Text style={styles.label}>PASSWORD</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your password"
-              placeholderTextColor="#9BB8AF"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-            />
+          {/* ── FORM CARD ────────────────────── */}
+          <View style={styles.card}>
+
+            <Text style={styles.cardTitle}>Welcome back, Warrior</Text>
+            <Text style={styles.cardSub}>Login to continue your training</Text>
+
+            {error ? (
+              <View style={styles.errorBox}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
+            {/* Email */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>EMAIL</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="your@email.com"
+                placeholderTextColor={MUTED}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+
+            {/* Password */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>PASSWORD</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your password"
+                placeholderTextColor={MUTED}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
+            </View>
+
+            {/* Login button */}
+            <TouchableOpacity
+              style={[styles.loginBtn, loading && { opacity: 0.7 }]}
+              onPress={handleLogin}
+              disabled={loading}
+              activeOpacity={0.85}
+            >
+              {loading
+                ? <ActivityIndicator color={WHITE} />
+                : <Text style={styles.loginBtnText}>⚔️  Enter the Dojo</Text>
+              }
+            </TouchableOpacity>
+
+            {/* Register link */}
+            <TouchableOpacity
+              style={styles.registerLink}
+              onPress={() => router.push('/(auth)/register')}
+            >
+              <Text style={styles.registerText}>
+                New warrior?{' '}
+                <Text style={styles.registerBold}>Create account</Text>
+              </Text>
+            </TouchableOpacity>
+
           </View>
 
-          <TouchableOpacity
-            style={[styles.btn, loading && styles.btnDisabled]}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            {loading
-              ? <ActivityIndicator color="#fff" />
-              : <Text style={styles.btnText}>Login</Text>
-            }
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.registerLink}
-            onPress={() => router.push('/(auth)/register')}
-          >
-            <Text style={styles.registerText}>
-              Don't have an account?{' '}
-              <Text style={styles.registerBold}>Register</Text>
+          {/* ── BOTTOM ───────────────────────── */}
+          <View style={styles.bottom}>
+            <Text style={styles.bottomText}>
+              IELTS & TOEFL Vocabulary Adventure
             </Text>
-          </TouchableOpacity>
-        </View>
+          </View>
 
-      </ScrollView>
+        </ScrollView>
+      </ImageBackground>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container:    { flex: 1, backgroundColor: '#ECF6FF' },
-  scroll:       { flexGrow: 1 },
-  header: {
-    backgroundColor: '#2D9596',
+  container:  { flex: 1 },
+
+  // Background
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(9,16,87,0.72)',
+  },
+
+  scroll: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
     paddingTop: 80,
-    paddingBottom: 48,
+    paddingBottom: 40,
+  },
+
+  // Top section
+  topSection: {
     alignItems: 'center',
+    marginBottom: 32,
+  },
+  logoWrap: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: 'rgba(45,149,150,0.25)',
+    borderWidth: 2,
+    borderColor: TEAL,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  logoStar: {
+    fontSize: 32,
+    color: TEAL,
   },
   appName: {
-    fontSize: 40,
+    fontSize: 42,
     fontWeight: '900',
-    color: '#fff',
+    color: WHITE,
     letterSpacing: 6,
+    marginBottom: 8,
   },
   tagline: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.75)',
-    marginTop: 6,
-    letterSpacing: 1,
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.7)',
+    fontWeight: '500',
+    textAlign: 'center',
+    marginBottom: 20,
+    letterSpacing: 0.5,
   },
-  form:         { flex: 1, padding: 24, paddingTop: 36 },
-  title:        { fontSize: 26, fontWeight: '800', color: '#091057', marginBottom: 6 },
-  subtitle:     { fontSize: 13, color: '#6B8F8A', marginBottom: 28 },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    width: '60%',
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(45,149,150,0.4)',
+  },
+  dividerIcon: { fontSize: 16 },
+
+  // Card
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 20,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(45,149,150,0.3)',
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: NAVY,
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  cardSub: {
+    fontSize: 13,
+    color: MUTED,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+
+  // Error
   errorBox: {
-    backgroundColor: '#FEF2F2',
+    backgroundColor: '#FFF0F0',
     borderRadius: 10,
     padding: 12,
     marginBottom: 16,
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderColor: '#FECACA',
   },
-  errorText:    { color: '#DC2626', fontSize: 13, fontWeight: '600' },
-  field:        { marginBottom: 18 },
-  label: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#091057',
-    marginBottom: 7,
+  errorText: { color: '#DC2626', fontSize: 13, fontWeight: '600' },
+
+  // Fields
+  field:      { marginBottom: 14 },
+  fieldLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: MUTED,
     letterSpacing: 0.8,
+    marginBottom: 6,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: ICE,
     borderRadius: 12,
-    borderWidth: 0.5,
-    borderColor: '#CDEDFF',
-    padding: 14,
+    borderWidth: 1,
+    borderColor: BORDER,
+    padding: 13,
     fontSize: 14,
-    color: '#091057',
+    color: NAVY,
   },
-  btn: {
-    backgroundColor: '#2A9D8F',
+
+  // Login button
+  loginBtn: {
+    backgroundColor: TEAL,
     borderRadius: 14,
-    padding: 16,
+    paddingVertical: 14,
     alignItems: 'center',
-    marginTop: 8,
-    shadowColor: '#2A9D8F',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    marginTop: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
   },
-  btnDisabled:  { backgroundColor: '#A8D5BA' },
-  btnText:      { color: '#fff', fontSize: 16, fontWeight: '800' },
-  registerLink: { marginTop: 24, alignItems: 'center' },
-  registerText: { fontSize: 13, color: '#6B8F8A' },
-  registerBold: { color: '#2A9D8F', fontWeight: '700' },
+  loginBtnText: {
+    color: WHITE,
+    fontSize: 15,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+
+  // Register
+  registerLink: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  registerText: { fontSize: 13, color: MUTED },
+  registerBold: { color: TEAL, fontWeight: '700' },
+
+  // Bottom
+  bottom: {
+    alignItems: 'center',
+    marginTop: 24,
+  },
+  bottomText: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.5)',
+    letterSpacing: 1,
+    fontWeight: '600',
+  },
 });

@@ -58,7 +58,9 @@ function WordChip({ word }) {
 }
 
 function BattleRow({ battle, index }) {
-  const isWin   = (battle.score || 0) >= 3;
+  const total  = battle.total || 5;
+  const thresh = Math.ceil(total / 2);
+  const isWin  = (battle.score || 0) >= thresh;
   const dateStr = battle.date?.seconds
     ? new Date(battle.date.seconds * 1000).toLocaleDateString('en-GB', {
         day: '2-digit', month: 'short', year: 'numeric'
@@ -139,7 +141,11 @@ export default function ProgressScreen() {
   const levelTitle   = getLevelTitle(level);
 
   const totalBattles = battles.length;
-  const wonBattles   = battles.filter(b => (b.score || 0) >= 3).length;
+  const wonBattles = battles.filter(b => {
+  const total  = b.total || 5;
+  const thresh = Math.ceil(total / 2);
+  return (b.score || 0) >= thresh;
+}).length;
   const winRate      = totalBattles > 0
     ? Math.round((wonBattles / totalBattles) * 100)
     : 0;

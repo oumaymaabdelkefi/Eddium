@@ -4,16 +4,16 @@
     "slug": "eddium",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "eddium",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "eddium",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.eddium.app"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#2D9596",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -25,8 +25,7 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router",
-      "expo-status-bar"
+      "expo-router"
     ],
     "assetBundlePatterns": [
       "**/*"

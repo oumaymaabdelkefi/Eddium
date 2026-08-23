@@ -4,13 +4,29 @@ import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { View, ActivityIndicator } from 'react-native';
 
 function RootLayoutNav() {
-  const { user, userData, loading } = useAuth();
+  const auth = useAuth();
+
+  // Guard against null context
+  if (!auth) {
+    return (
+      <View style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ECF6FF',
+      }}>
+        <ActivityIndicator size="large" color="#2D9596" />
+      </View>
+    );
+  }
+
+  const { user, userData, loading } = auth;
   const router   = useRouter();
   const segments = useSegments();
 
   useEffect(() => {
-    if (loading)   return;
-    if (!userData && user) return; // wait for userData
+    if (loading) return;
+    if (!userData && user) return;
 
     const inAuth  = segments[0] === '(auth)';
     const inAdmin = segments[0] === '(admin)';
