@@ -278,9 +278,9 @@ export default function ProgressScreen() {
             </Text>
           </View>
         ) : (
-          battles.map((battle, i) => (
-            <BattleRow key={battle.id || i} battle={battle} index={i} />
-          ))
+          battles.slice(0, 5).map((battle, i) => (
+  <BattleRow key={battle.id || i} battle={battle} index={i} />
+))
         )}
       </View>
 
