@@ -290,6 +290,17 @@ export default function HomeScreen() {
         <Text style={styles.battleText}>Start Battle</Text>
       </TouchableOpacity>
 
+      {/* ── DOJO LIBRARY ───────────────────────── */}
+      <TouchableOpacity
+        style={styles.dojoBtn}
+        onPress={() => router.push('/(tabs)/words')}
+        activeOpacity={0.85}
+      >
+        <Text style={styles.battleIcon}>🏯</Text>
+        <Text style={styles.dojoBtnText}>Dojo Library</Text>
+        <Text style={styles.dojoSub}>Learn new words</Text>
+      </TouchableOpacity>
+
       {/* ── LEARNING PATH ──────────────────────── */}
       <View style={styles.card}>
         <Text style={styles.sectionLabel}>LEARNING PATH</Text>
@@ -560,6 +571,23 @@ const styles = StyleSheet.create({
   battleIcon: { fontSize: 20 },
   battleText: { color: WHITE, fontSize: 16, fontWeight: '800' },
 
+  // Dojo Library button
+  dojoBtn: {
+    backgroundColor: NAVY,
+    borderRadius: 16,
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    borderWidth: 2,
+    borderColor: TEAL,
+  },
+  dojoBtnText: { color: WHITE, fontSize: 16, fontWeight: '800' },
+  dojoSub:     { color: TEAL_LIGHT, fontSize: 12, fontWeight: '600' },
+
   // Path
   pathHint: {
     fontSize: 11,
@@ -625,7 +653,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: TEAL,
   },
-
   // Logout
   logoutBtn: {
     marginHorizontal: 16,
